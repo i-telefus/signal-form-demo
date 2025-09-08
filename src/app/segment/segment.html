@@ -1,0 +1,91 @@
+<mat-card class="card">
+  <mat-card-header class="card-header">
+    <mat-card-title>{{ header() }}</mat-card-title>
+    <button matIconButton>
+      <mat-icon fontIcon="close" />
+    </button>
+  </mat-card-header>
+  <mat-card-content class="card-content">
+    <mat-form-field>
+      <mat-label>Title</mat-label>
+      <input matInput placeholder="Title" [(ngModel)]="title" #titleCtrl="ngModel" required>
+      @if (titleCtrl.errors?.required) {
+        <mat-error>This field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input matInput placeholder="Description" [(ngModel)]="description" required>
+    </mat-form-field>
+
+    @for (condition of conditions(); track $index; let i = $index; let first = $first) {
+      <div class="segment-condition">
+        <div class="header">
+          <h4>Condition {{i + 1}}</h4>
+          @if (!first) {
+            <mat-form-field>
+              <mat-select [(ngModel)]="condition.join">
+                @for (join of joins; track $index) {
+                  <mat-option [value]="join.key">
+                    {{ join.display | titlecase }}
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button matIconButton (click)="removeCondition(i)">
+              <mat-icon fontIcon="delete" />
+            </button>
+          }
+        </div>
+        <mat-form-field>
+          <mat-label>Parameter</mat-label>
+          <mat-select [(ngModel)]="condition.parameter" required>
+            @for (parameter of parameters; track $index) {
+              <mat-option [value]="parameter">
+                {{ parameter }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Operator</mat-label>
+          <mat-select [(ngModel)]="condition.operator" required>
+            @for (operator of operators; track $index) {
+              <mat-option [value]="operator.key">
+                {{ operator.display }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Value</mat-label>
+          <input matInput placeholder="Description" [(ngModel)]="condition.value" required>
+        </mat-form-field>
+      </div>
+    }
+    @if (conditions().length < 10) {
+      <button class="segment-condition-action" matIconButton (click)="addCondition()">
+        <mat-icon fontIcon="add" />
+      </button>
+    }
+    <div class="segment-info"></div>
+    <div class="segment-actions"></div>
+
+  </mat-card-content>
+  <mat-card-actions class="card-actions">
+    <button matButton color="primary" (click)="save()">
+      <mat-icon fontIcon="save" />
+      Save
+    </button>
+
+    <button matButton (click)="cancel()">
+      <mat-icon fontIcon="close" />
+      Close
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<pre class="value">{{ payload() | json }}</pre>
+
+
