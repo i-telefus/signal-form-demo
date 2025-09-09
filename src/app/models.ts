@@ -33,7 +33,7 @@ export interface Condition {
   parameter: string;
   operator: keyof typeof FilterOperator;
   value: string;
-  join?: Join;
+  joinOp?: Join;
 }
 
 export interface Segment {

@@ -1,0 +1,51 @@
+:host {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.card {
+  width: 100%;
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+
+.segment-condition {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: .5rem;
+
+  .header {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.segment-condition-action {
+  width: 100%;
+  height: 3rem;
+  background-color: lightgrey;
+}

@@ -58,7 +58,7 @@ import { JsonPipe, TitleCasePipe } from '@angular/common';
     },
   ],
 })
-export class SegmentComponent {
+export default class SegmentComponent {
   readonly segment = input<Segment>();
 
   readonly parameters = [
@@ -99,7 +99,7 @@ export class SegmentComponent {
         parameter: this.parameters[0],
         operator: 'equal_to',
         value: '',
-        join: 'and',
+        joinOp: 'and',
       },
     ]);
   }

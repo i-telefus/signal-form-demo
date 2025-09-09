@@ -17,7 +17,7 @@ export const segmentMock: Segment = {
       parameter: 'Webmaster geo',
       operator: 'not_equal_to',
       value: 'john',
-      join: 'and',
+      joinOp: 'and',
     },
   ],
 };

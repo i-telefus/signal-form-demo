@@ -8,24 +8,35 @@
   <mat-card-content class="card-content">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" [(ngModel)]="title" #titleCtrl="ngModel" required>
-      @if (titleCtrl.errors?.required) {
-        <mat-error>This field is required</mat-error>
+      <input matInput placeholder="Title" [control]="form.title">
+      @let isTitleTouched = form.title().touched();
+      @let titleErrors = form.title().errors();
+      @if (isTitleTouched && titleErrors.length) {
+        @for(error of titleErrors; track $index) {
+          <mat-error>{{ error?.message }}</mat-error>
+        }
       }
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <input matInput placeholder="Description" [(ngModel)]="description" required>
+      <input matInput placeholder="Description" [control]="form.description">
+      @let isDescTouched = form.title().touched();
+      @let descErrors = form.title().errors();
+      @if (isDescTouched && descErrors.length) {
+        @for(error of descErrors; track $index) {
+          <mat-error>{{ error?.message }}</mat-error>
+        }
+      }
     </mat-form-field>
 
-    @for (condition of conditions(); track $index; let i = $index; let first = $first) {
+    @for (condition of form.conditions; track $index; let i = $index; let first = $first) {
       <div class="segment-condition">
         <div class="header">
           <h4>Condition {{i + 1}}</h4>
-          @if (!first) {
+          @if (!first && condition.joinOp) {
             <mat-form-field>
-              <mat-select [(ngModel)]="condition.joinOp">
+              <mat-select [control]="condition.joinOp">
                 @for (join of joins; track $index) {
                   <mat-option [value]="join.key">
                     {{ join.display | titlecase }}
@@ -40,7 +51,7 @@
         </div>
         <mat-form-field>
           <mat-label>Parameter</mat-label>
-          <mat-select [(ngModel)]="condition.parameter" required>
+          <mat-select [control]="condition.parameter">
             @for (parameter of parameters; track $index) {
               <mat-option [value]="parameter">
                 {{ parameter }}
@@ -50,7 +61,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Operator</mat-label>
-          <mat-select [(ngModel)]="condition.operator" required>
+          <mat-select [control]="condition.operator">
             @for (operator of operators; track $index) {
               <mat-option [value]="operator.key">
                 {{ operator.display }}
@@ -60,11 +71,19 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Value</mat-label>
-          <input matInput placeholder="Description" [(ngModel)]="condition.value" required>
+          <input matInput placeholder="Description" [control]="condition.value">
         </mat-form-field>
       </div>
     }
-    @if (conditions().length < 10) {
+
+    @let condErrors = form.conditions().errors();
+    @if (condErrors.length) {
+      @for(error of condErrors; track $index) {
+        <mat-error>{{ error?.message }}</mat-error>
+      }
+    }
+
+    @if (form.conditions.length < 10) {
       <button class="segment-condition-action" matIconButton (click)="addCondition()">
         <mat-icon fontIcon="add" />
       </button>
@@ -85,7 +104,5 @@
     </button>
   </mat-card-actions>
 </mat-card>
-
-<pre class="value">{{ payload() | json }}</pre>
-
+<pre class="value">{{ form().value() | json }}</pre>
 
