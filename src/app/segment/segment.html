@@ -8,7 +8,13 @@
   <mat-card-content class="card-content">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" [(ngModel)]="title" #titleCtrl="ngModel" required>
+      <input
+        matInput
+        placeholder="Title"
+        [(ngModel)]="title"
+        #titleCtrl="ngModel"
+        required
+      />
       @if (titleCtrl.errors?.required) {
         <mat-error>This field is required</mat-error>
       }
@@ -16,13 +22,23 @@
 
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <input matInput placeholder="Description" [(ngModel)]="description" required>
+      <input
+        matInput
+        placeholder="Description"
+        [(ngModel)]="description"
+        required
+      />
     </mat-form-field>
 
-    @for (condition of conditions(); track $index; let i = $index; let first = $first) {
+    @for (
+      condition of conditions();
+      track $index;
+      let i = $index;
+      let first = $first
+    ) {
       <div class="segment-condition">
         <div class="header">
-          <h4>Condition {{i + 1}}</h4>
+          <h4>Condition {{ i + 1 }}</h4>
           @if (!first) {
             <mat-form-field>
               <mat-select [(ngModel)]="condition.joinOp">
@@ -60,18 +76,26 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Value</mat-label>
-          <input matInput placeholder="Description" [(ngModel)]="condition.value" required>
+          <input
+            matInput
+            placeholder="Description"
+            [(ngModel)]="condition.value"
+            required
+          />
         </mat-form-field>
       </div>
     }
     @if (conditions().length < 10) {
-      <button class="segment-condition-action" matIconButton (click)="addCondition()">
+      <button
+        class="segment-condition-action"
+        matIconButton
+        (click)="addCondition()"
+      >
         <mat-icon fontIcon="add" />
       </button>
     }
     <div class="segment-info"></div>
     <div class="segment-actions"></div>
-
   </mat-card-content>
   <mat-card-actions class="card-actions">
     <button matButton color="primary" (click)="save()">
@@ -87,5 +111,3 @@
 </mat-card>
 
 <pre class="value">{{ payload() | json }}</pre>
-
-

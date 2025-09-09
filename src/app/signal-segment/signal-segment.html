@@ -8,11 +8,11 @@
   <mat-card-content class="card-content">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" [control]="form.title">
+      <input matInput placeholder="Title" [control]="form.title" />
       @let isTitleTouched = form.title().touched();
       @let titleErrors = form.title().errors();
       @if (isTitleTouched && titleErrors.length) {
-        @for(error of titleErrors; track $index) {
+        @for (error of titleErrors; track $index) {
           <mat-error>{{ error?.message }}</mat-error>
         }
       }
@@ -20,20 +20,25 @@
 
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <input matInput placeholder="Description" [control]="form.description">
+      <input matInput placeholder="Description" [control]="form.description" />
       @let isDescTouched = form.title().touched();
       @let descErrors = form.title().errors();
       @if (isDescTouched && descErrors.length) {
-        @for(error of descErrors; track $index) {
+        @for (error of descErrors; track $index) {
           <mat-error>{{ error?.message }}</mat-error>
         }
       }
     </mat-form-field>
 
-    @for (condition of form.conditions; track $index; let i = $index; let first = $first) {
+    @for (
+      condition of form.conditions;
+      track $index;
+      let i = $index;
+      let first = $first
+    ) {
       <div class="segment-condition">
         <div class="header">
-          <h4>Condition {{i + 1}}</h4>
+          <h4>Condition {{ i + 1 }}</h4>
           @if (!first && condition.joinOp) {
             <mat-form-field>
               <mat-select [control]="condition.joinOp">
@@ -71,26 +76,33 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Value</mat-label>
-          <input matInput placeholder="Description" [control]="condition.value">
+          <input
+            matInput
+            placeholder="Description"
+            [control]="condition.value"
+          />
         </mat-form-field>
       </div>
     }
 
     @let condErrors = form.conditions().errors();
     @if (condErrors.length) {
-      @for(error of condErrors; track $index) {
+      @for (error of condErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>
       }
     }
 
     @if (form.conditions.length < 10) {
-      <button class="segment-condition-action" matIconButton (click)="addCondition()">
+      <button
+        class="segment-condition-action"
+        matIconButton
+        (click)="addCondition()"
+      >
         <mat-icon fontIcon="add" />
       </button>
     }
     <div class="segment-info"></div>
     <div class="segment-actions"></div>
-
   </mat-card-content>
   <mat-card-actions class="card-actions">
     <button matButton color="primary" (click)="save()">
@@ -105,4 +117,3 @@
   </mat-card-actions>
 </mat-card>
 <pre class="value">{{ form().value() | json }}</pre>
-
