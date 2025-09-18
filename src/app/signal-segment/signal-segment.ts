@@ -114,15 +114,7 @@ export default class SignalSegment {
 
   readonly segmentModel = linkedSignal(() => this.segment());
 
-  readonly form = form(this.segmentModel, (segment) => {
-    apply(segment.title, requiredSchema);
-    apply(segment.description, requiredSchema);
-    // required(segment.description, {
-    //   message: 'This field is required',
-    //   when: ({ valueOf }) => !!valueOf(segment.isDescriptionRequired),
-    // });
-    apply(segment.conditions, minConditionsSchema);
-  });
+  readonly form = form(this.segmentModel, segmentSchema);
 
   addCondition() {
     this.form.conditions().value.set([
