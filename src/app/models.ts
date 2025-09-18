@@ -23,11 +23,20 @@ export const FilterOperator = {
   less_then_or_equal_to: 'Less than or equal to',
 } as const;
 
-export type FilterOperator =
-  (typeof FilterOperator)[keyof typeof FilterOperator];
 export const FilterOperatorValues = Object.entries(FilterOperator).map(
   ([key, v]) => ({ key, display: v }),
 );
+
+export const Parameters = {
+  WebmasterStatus: 'Webmaster status',
+  WebmasterGeo: 'Webmaster geo',
+  WebmasterLanguage: 'Webmaster language',
+} as const;
+
+export const ParametersValues = Object.entries(Parameters).map(([key, v]) => ({
+  key,
+  display: v,
+}));
 
 export interface Condition {
   parameter: string;
@@ -41,4 +50,5 @@ export interface Segment {
   title: string;
   description: string;
   conditions: Condition[];
+  isDescriptionRequired: boolean;
 }

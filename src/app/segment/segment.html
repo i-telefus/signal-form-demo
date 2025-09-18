@@ -26,9 +26,11 @@
         matInput
         placeholder="Description"
         [(ngModel)]="description"
-        required
+        [required]="isRequired()"
       />
     </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="isRequired">Description required</mat-checkbox>
 
     @for (
       condition of conditions();
@@ -58,8 +60,8 @@
           <mat-label>Parameter</mat-label>
           <mat-select [(ngModel)]="condition.parameter" required>
             @for (parameter of parameters; track $index) {
-              <mat-option [value]="parameter">
-                {{ parameter }}
+              <mat-option [value]="parameter.key">
+                {{ parameter.display }}
               </mat-option>
             }
           </mat-select>
@@ -98,7 +100,7 @@
     <div class="segment-actions"></div>
   </mat-card-content>
   <mat-card-actions class="card-actions">
-    <button matButton color="primary" (click)="save()">
+    <button matButton color="primary"  (click)="save()">
       <mat-icon fontIcon="save" />
       Save
     </button>

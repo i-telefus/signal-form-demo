@@ -1,17 +1,18 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, linkedSignal } from '@angular/core';
 import {
   Condition,
   FilterOperatorValues,
   JoinValues,
+  ParametersValues,
   Segment,
 } from '../models';
 import {
+  apply,
   Control,
   customError,
   disabled,
   FieldPath,
   form,
-  PathKind,
   required,
   schema,
   validate,
@@ -28,33 +29,45 @@ import {
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatError, MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 export function minTwoConditions(
-  conditionsPath: FieldPath<Condition[], PathKind.Child>,
+  path: FieldPath<Condition[]>,
+  minConditions = 2,
 ) {
-  validate(conditionsPath, (ctx) => {
+  validate(path, (ctx) => {
     const conditions = ctx.value();
 
-    if (conditions.length < 2) {
+    if (conditions.length < minConditions) {
       return customError({
         kind: 'minTwoConditions',
         message: `At least 2 conditions are required. Currently have ${conditions.length}.`,
       });
     }
 
-    return undefined;
+    return null;
   });
 }
 
-const SEGMENT_SCHEMA = schema<Segment>((segment) => {
+const segmentSchema = schema<Segment>((segment) => {
   required(segment.title, {
     message: 'This field is required',
+    when: ({ valueOf }) => valueOf(segment.isDescriptionRequired) === true,
   });
-  disabled(segment.title, ({ value }) => value() === 'Default');
   required(segment.description, {
-    message: 'Description is required',
+    message: 'This field is required',
+    when: ({ valueOf }) => valueOf(segment.isDescriptionRequired) === true,
   });
   minTwoConditions(segment.conditions);
+});
+
+const requiredSchema = schema<string>((path) => {
+  required(path, { message: 'This field is required' });
+});
+
+const minConditionsSchema = schema<Condition[]>((path) => {
+  minTwoConditions(path);
 });
 
 @Component({
@@ -77,18 +90,21 @@ const SEGMENT_SCHEMA = schema<Segment>((segment) => {
     MatError,
     JsonPipe,
     Control,
+    MatCheckbox,
   ],
   templateUrl: './signal-segment.html',
   styleUrl: './signal-segment.scss',
+  providers: [
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
+  ],
 })
 export default class SignalSegment {
-  readonly segment = input<Segment>();
+  readonly segment = input.required<Segment>();
 
-  readonly parameters = [
-    'Webmaster status',
-    'Webmaster geo',
-    'Webmaster language',
-  ];
+  readonly parameters = ParametersValues;
   readonly operators = FilterOperatorValues;
   readonly joins = JoinValues;
 
@@ -96,32 +112,23 @@ export default class SignalSegment {
     () => `${this.segment() ? 'Edit' : 'Create new'} signal segment`,
   );
 
-  readonly segmentModel = signal<Segment>({
-    id: '',
-    title: '',
-    description: '',
-    conditions: [
-      {
-        parameter: 'Webmaster status',
-        operator: 'equal_to',
-        value: '18',
-      },
-      // {
-      //   parameter: 'Webmaster geo',
-      //   operator: 'not_equal_to',
-      //   value: 'john',
-      //   joinOp: 'and',
-      // },
-    ],
-  });
+  readonly segmentModel = linkedSignal(() => this.segment());
 
-  readonly form = form(this.segmentModel, SEGMENT_SCHEMA);
+  readonly form = form(this.segmentModel, (segment) => {
+    apply(segment.title, requiredSchema);
+    apply(segment.description, requiredSchema);
+    // required(segment.description, {
+    //   message: 'This field is required',
+    //   when: ({ valueOf }) => !!valueOf(segment.isDescriptionRequired),
+    // });
+    apply(segment.conditions, minConditionsSchema);
+  });
 
   addCondition() {
     this.form.conditions().value.set([
       ...this.form.conditions().value(),
       {
-        parameter: this.parameters[0],
+        parameter: this.parameters[0].key,
         operator: 'equal_to',
         value: '',
         joinOp: 'and',

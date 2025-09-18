@@ -4,6 +4,7 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
+import { async } from 'rxjs';
 
 const routes: Route[] = [
   {
@@ -17,12 +18,15 @@ const routes: Route[] = [
       },
       {
         path: 'segment',
-        loadComponent: async () => await import('./segment/segment'),
+        loadComponent: async () => await import('./wrapper/wrapper'),
       },
       {
         path: 'signal-segment',
-        loadComponent: async () =>
-          await import('./signal-segment/signal-segment'),
+        loadComponent: async () => await import('./wrapper/wrapper'),
+      },
+      {
+        path: 'demo',
+        loadComponent: async () => await import('./simple-demos/user'),
       },
     ],
   },

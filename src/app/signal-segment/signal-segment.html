@@ -9,26 +9,21 @@
     <mat-form-field>
       <mat-label>Title</mat-label>
       <input matInput placeholder="Title" [control]="form.title" />
-      @let isTitleTouched = form.title().touched();
       @let titleErrors = form.title().errors();
-      @if (isTitleTouched && titleErrors.length) {
-        @for (error of titleErrors; track $index) {
-          <mat-error>{{ error?.message }}</mat-error>
-        }
+      @for (error of titleErrors; track $index) {
+        <mat-error>{{ error?.message }}</mat-error>
       }
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Description</mat-label>
       <input matInput placeholder="Description" [control]="form.description" />
-      @let isDescTouched = form.title().touched();
-      @let descErrors = form.title().errors();
-      @if (isDescTouched && descErrors.length) {
-        @for (error of descErrors; track $index) {
-          <mat-error>{{ error?.message }}</mat-error>
-        }
+      @let descErrors = form.description().errors();
+      @for (error of descErrors; track $index) {
+        <mat-error>{{ error?.message }}</mat-error>
       }
     </mat-form-field>
+    <mat-checkbox [control]="form.isDescriptionRequired">Description required</mat-checkbox>
 
     @for (
       condition of form.conditions;
@@ -58,8 +53,8 @@
           <mat-label>Parameter</mat-label>
           <mat-select [control]="condition.parameter">
             @for (parameter of parameters; track $index) {
-              <mat-option [value]="parameter">
-                {{ parameter }}
+              <mat-option [value]="parameter.key">
+                {{ parameter.display }}
               </mat-option>
             }
           </mat-select>
@@ -105,7 +100,7 @@
     <div class="segment-actions"></div>
   </mat-card-content>
   <mat-card-actions class="card-actions">
-    <button matButton color="primary" (click)="save()">
+    <button matButton color="primary" [disabled]="form().invalid"  (click)="save()">
       <mat-icon fontIcon="save" />
       Save
     </button>

@@ -12,6 +12,7 @@ import {
   Condition,
   FilterOperatorValues,
   JoinValues,
+  ParametersValues,
   Segment,
 } from '../models';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -23,10 +24,10 @@ import {
   MatCardActions,
   MatCardContent,
 } from '@angular/material/card';
-import { SEGMENT, segmentMock } from '../data';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { JsonPipe, TitleCasePipe } from '@angular/common';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-segment',
@@ -48,6 +49,7 @@ import { JsonPipe, TitleCasePipe } from '@angular/common';
     TitleCasePipe,
     MatError,
     JsonPipe,
+    MatCheckbox,
   ],
   templateUrl: './segment.html',
   styleUrl: './segment.scss',
@@ -59,13 +61,9 @@ import { JsonPipe, TitleCasePipe } from '@angular/common';
   ],
 })
 export default class SegmentComponent {
-  readonly segment = input<Segment>();
+  readonly segment = input.required<Segment>();
 
-  readonly parameters = [
-    'Webmaster status',
-    'Webmaster geo',
-    'Webmaster language',
-  ];
+  readonly parameters = ParametersValues;
   readonly operators = FilterOperatorValues;
   readonly joins = JoinValues;
 
@@ -75,6 +73,9 @@ export default class SegmentComponent {
 
   readonly title = linkedSignal(() => this.segment()?.title ?? '');
   readonly description = linkedSignal(() => this.segment()?.description ?? '');
+  readonly isRequired = linkedSignal(
+    () => this.segment()?.isDescriptionRequired ?? false,
+  );
   readonly conditions = linkedSignal<Condition[]>(
     () =>
       this.segment()?.conditions ?? [
@@ -87,8 +88,10 @@ export default class SegmentComponent {
   );
 
   readonly payload = computed<Segment>(() => ({
+    id: this.segment().id,
     title: this.title(),
     description: this.description(),
+    isDescriptionRequired: this.isRequired(),
     conditions: this.conditions(),
   }));
 
@@ -96,7 +99,7 @@ export default class SegmentComponent {
     this.conditions.set([
       ...this.conditions(),
       {
-        parameter: this.parameters[0],
+        parameter: this.parameters[0].key,
         operator: 'equal_to',
         value: '',
         joinOp: 'and',
