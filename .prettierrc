@@ -1,3 +1,40 @@
 {
-  "singleQuote": true
+  "plugins": [
+    "prettier-plugin-packagejson",
+    "prettier-plugin-organize-attributes"
+  ],
+  "singleQuote": true,
+  "proseWrap": "always",
+  "htmlWhitespaceSensitivity": "ignore",
+  "bracketSpacing": true,
+  "trailingComma": "all",
+  "tabWidth": 2,
+  "printWidth": 80,
+  "semi": true,
+  "arrowParens": "avoid",
+  "attributeGroups": [
+    "^\\*",
+    "^\\w+(?<!data|area|http|let)-",
+    "^id$",
+    "^\\[id\\]$",
+    "^class$",
+    "^\\[class\\.",
+    "$DEFAULT",
+    "^#"
+  ],
+  "attributeSort": "ASC",
+  "overrides": [
+    {
+      "files": ["**/*.css", "**/*.scss"],
+      "options": {
+        "singleQuote": true
+      }
+    },
+    {
+      "files": ["**/*.ts"],
+      "options": {
+        "printWidth": 80
+      }
+    }
+  ]
 }
