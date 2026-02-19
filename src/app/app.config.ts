@@ -4,7 +4,6 @@ import {
   provideZonelessChangeDetection,
 } from '@angular/core';
 import { provideRouter, Route } from '@angular/router';
-import { async } from 'rxjs';
 
 const routes: Route[] = [
   {

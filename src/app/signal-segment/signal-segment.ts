@@ -6,17 +6,7 @@ import {
   ParametersValues,
   Segment,
 } from '../models';
-import {
-  apply,
-  Control,
-  customError,
-  disabled,
-  FieldPath,
-  form,
-  required,
-  schema,
-  validate,
-} from '@angular/forms/signals';
+
 import { JsonPipe, TitleCasePipe } from '@angular/common';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import {
@@ -31,22 +21,32 @@ import { MatError, MatOption, MatSelect } from '@angular/material/select';
 import { MatIcon } from '@angular/material/icon';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
+import {
+  Field,
+  form,
+  required,
+  schema,
+  SchemaPath,
+  validate,
+} from '@angular/forms/signals';
 
 export function minTwoConditions(
-  path: FieldPath<Condition[]>,
+  path: SchemaPath<Condition[]>,
   minConditions = 2,
 ) {
   validate(path, (ctx) => {
     const conditions = ctx.value();
 
-    if (conditions.length < minConditions) {
-      return customError({
-        kind: 'minTwoConditions',
-        message: `At least 2 conditions are required. Currently have ${conditions.length}.`,
-      });
-    }
-
-    return null;
+    // return customError({
+    //   kind: 'minTwoConditions',
+    //   message: `At least 2 conditions are required. Currently have ${conditions.length}.`,
+    // });
+    return conditions.length > minConditions
+      ? null
+      : {
+          kind: 'minTwoConditions',
+          message: `At least 2 conditions are required. Currently have ${conditions.length}.`,
+        };
   });
 }
 
@@ -89,8 +89,8 @@ const minConditionsSchema = schema<Condition[]>((path) => {
     TitleCasePipe,
     MatError,
     JsonPipe,
-    Control,
     MatCheckbox,
+    Field,
   ],
   templateUrl: './signal-segment.html',
   styleUrl: './signal-segment.scss',

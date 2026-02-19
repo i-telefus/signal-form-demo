@@ -3,11 +3,11 @@ import {
   form,
   required,
   schema,
-  Control,
   apply,
   email,
   applyEach,
   applyWhen,
+  Field
 } from '@angular/forms/signals';
 import {
   MatError,
@@ -35,15 +35,15 @@ const requiredSchema = schema<string>((path) => {
 });
 
 @Component({
-  selector: 'user-demo',
-  imports: [MatFormField, MatLabel, MatInput, MatError, Control, MatButton],
+  selector: 'app-user-demo',
+  imports: [MatFormField, MatLabel, MatInput, MatError, MatButton, Field],
   template: `
     <button matButton type="button" (click)="updateName()">
       Update First name to Lol
     </button>
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="First name" [control]="form.firstName" />
+      <input matInput placeholder="First name" [field]="form.firstName" />
       @let firstNameErrors = form.firstName().errors();
       @for (error of firstNameErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>
@@ -51,7 +51,7 @@ const requiredSchema = schema<string>((path) => {
     </mat-form-field>
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Last name" [control]="form.lastName" />
+      <input matInput placeholder="Last name" [field]="form.lastName" />
       @let lastNameErrors = form.lastName().errors();
       @for (error of lastNameErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>
@@ -59,7 +59,7 @@ const requiredSchema = schema<string>((path) => {
     </mat-form-field>
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Email" [control]="form.email" />
+      <input matInput placeholder="Email" [field]="form.email" />
       @let emailErrors = form.email().errors();
       @for (error of emailErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>

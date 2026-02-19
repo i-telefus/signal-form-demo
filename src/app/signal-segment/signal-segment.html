@@ -8,7 +8,7 @@
   <mat-card-content class="card-content">
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput placeholder="Title" [control]="form.title" />
+      <input matInput placeholder="Title" [field]="form.title" />
       @let titleErrors = form.title().errors();
       @for (error of titleErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>
@@ -17,13 +17,13 @@
 
     <mat-form-field>
       <mat-label>Description</mat-label>
-      <input matInput placeholder="Description" [control]="form.description" />
+      <input matInput placeholder="Description" [field]="form.description" />
       @let descErrors = form.description().errors();
       @for (error of descErrors; track $index) {
         <mat-error>{{ error?.message }}</mat-error>
       }
     </mat-form-field>
-    <mat-checkbox [control]="form.isDescriptionRequired">Description required</mat-checkbox>
+    <mat-checkbox [field]="form.isDescriptionRequired">Description required</mat-checkbox>
 
     @for (
       condition of form.conditions;
@@ -36,7 +36,7 @@
           <h4>Condition {{ i + 1 }}</h4>
           @if (!first && condition.joinOp) {
             <mat-form-field>
-              <mat-select [control]="condition.joinOp">
+              <mat-select [field]="condition.joinOp">
                 @for (join of joins; track $index) {
                   <mat-option [value]="join.key">
                     {{ join.display | titlecase }}
@@ -51,7 +51,7 @@
         </div>
         <mat-form-field>
           <mat-label>Parameter</mat-label>
-          <mat-select [control]="condition.parameter">
+          <mat-select [field]="condition.parameter">
             @for (parameter of parameters; track $index) {
               <mat-option [value]="parameter.key">
                 {{ parameter.display }}
@@ -61,7 +61,7 @@
         </mat-form-field>
         <mat-form-field>
           <mat-label>Operator</mat-label>
-          <mat-select [control]="condition.operator">
+          <mat-select [field]="condition.operator">
             @for (operator of operators; track $index) {
               <mat-option [value]="operator.key">
                 {{ operator.display }}
@@ -74,7 +74,7 @@
           <input
             matInput
             placeholder="Description"
-            [control]="condition.value"
+            [field]="condition.value"
           />
         </mat-form-field>
       </div>
